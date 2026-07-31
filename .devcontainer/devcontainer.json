@@ -11,7 +11,7 @@
       "onAutoForward": "notify"
     }
   },
-  "postCreateCommand": "hugo server -D",
+  "postStartCommand": "hugo server -D",
   "customizations": {
     "vscode": {
       "extensions": ["budparr.language-hugo-vscode", "esbenp.prettier-vscode"]
