@@ -2,4 +2,5 @@
 /resources/_gen/
 .hugo_build.lock
 /node_modules/
-.claude/settings.local.json
+!.vscode/
+!.vscode/tasks.json
