@@ -1,0 +1,21 @@
+{
+  "name": "Personal Homepage (Hugo)",
+  "build": {
+    "dockerfile": "Dockerfile",
+    "context": ".."
+  },
+  "forwardPorts": [1313],
+  "portsAttributes": {
+    "1313": {
+      "label": "Hugo Preview",
+      "onAutoForward": "notify"
+    }
+  },
+  "postCreateCommand": "hugo server -D",
+  "customizations": {
+    "vscode": {
+      "extensions": ["budparr.language-hugo-vscode", "esbenp.prettier-vscode"]
+    }
+  },
+  "remoteUser": "vscode"
+}

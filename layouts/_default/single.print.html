@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="{{ .Site.Language.Lang | default "en" }}">
+  <head>
+    <meta charset="utf-8" />
+    <title>{{ .Site.Params.fullName | default .Site.Title }} &middot; {{ .Title }}</title>
+    <style>
+      /* Self-contained: no external stylesheet or font, so this renders
+         identically whether Puppeteer opens it over file:// or http://,
+         and stays legible to plain-text/ATS extraction either way. */
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        padding: 2.1rem 3rem;
+        max-width: 46rem;
+        font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+        font-size: 11pt;
+        line-height: 1.42;
+        color: #111;
+        background: #fff;
+      }
+
+      h1 {
+        margin: 0 0 0.15rem;
+        font-size: 22pt;
+      }
+
+      .contact-line {
+        margin: 0 0 1.25rem;
+        font-size: 10pt;
+        color: #333;
+      }
+
+      .contact-line a {
+        color: #111;
+        text-decoration: none;
+      }
+
+      h2 {
+        margin: 1.4rem 0 0.6rem;
+        padding-bottom: 0.25rem;
+        font-size: 13pt;
+        border-bottom: 1px solid #ccc;
+        break-after: avoid;
+      }
+
+      h2:first-of-type {
+        margin-top: 0;
+      }
+
+      h3 {
+        margin: 1rem 0 0.35rem;
+        font-size: 11pt;
+        break-after: avoid;
+      }
+
+      p {
+        margin: 0 0 0.6rem;
+        orphans: 3;
+        widows: 3;
+      }
+
+      /* Each job entry is an eyebrow label, a "**Title** · dates" line, then
+         a description paragraph — three sibling <p>s with no wrapping
+         element (they come straight from resume.md's markdown). Rather than
+         restructure the shared content, glue them together for pagination
+         purposes with break-after: avoid: a page break can still land
+         *before* an eyebrow (moving the whole entry to the next page), or
+         partway through a long description (normal paragraph flow), but
+         never between the eyebrow/title/start-of-description. */
+      .eyebrow {
+        margin: 1.1rem 0 0.1rem;
+        font-size: 9pt;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: #666;
+        break-after: avoid;
+        break-inside: avoid;
+      }
+
+      p:has(> strong:first-child) {
+        margin-top: 0.9rem;
+        break-after: avoid;
+        break-inside: avoid;
+      }
+
+      /* The skill-category paragraphs ("<strong>Programming Languages:</strong>
+         Java, ...") have the same shape as a job-title line and would
+         otherwise match the rule above — chaining all ten of them into one
+         break-after:avoid sequence and forcing the whole Skills section
+         onto a fresh page instead of flowing. They're not job entries;
+         reset them to the plain paragraph behavior. (Selector must be at
+         least as specific as the rule above — ".skill-groups-print p" alone
+         is *less* specific than "p:has(...)" and silently loses the
+         cascade, so it's repeated here with the same :has() clause.) */
+      .skill-groups-print p:has(> strong:first-child) {
+        margin-top: 0;
+        break-after: auto;
+        break-inside: auto;
+      }
+
+      strong {
+        color: #000;
+      }
+
+      a {
+        color: #111;
+      }
+
+      .skill-groups-screen,
+      .pdf-note-screen {
+        display: none;
+      }
+
+      /* The eyebrow labels ("FOUNDATIONS", "RANGE & SCALE", ...) are a
+         narrative device for the web page. In print they're a short,
+         standalone, all-caps line sitting right above a "Title — Company ·
+         Dates" line — exactly what heuristic ATS parsers key off of to
+         detect a new entry, with none of the actual signal. Drop them from
+         the PDF's text layer entirely rather than risk a phantom job
+         title/employer. */
+      .eyebrow {
+        display: none;
+      }
+
+      .skill-group {
+        margin: 1.25rem 0;
+      }
+
+      @page {
+        size: letter;
+        margin: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>{{ .Site.Params.fullName | default .Site.Title }}</h1>
+    <p class="contact-line">
+      {{- $parts := slice -}}
+      {{- with site.Params.contact.email -}}
+        {{- $parts = $parts | append (printf `<a href="mailto:%s">%s</a>` . .) -}}
+      {{- end -}}
+      {{- /* The visible text carries the actual URL, not a "LinkedIn"/
+      "GitHub" label — ATS text extraction reads the PDF's text layer, not
+      its link annotations, so a label-only link is invisible to a parser
+      even though it's clickable on screen. */ -}}
+      {{- with site.Params.social.linkedin -}}
+        {{- $display := . | replaceRE `^https?://(www\.)?` "" | strings.TrimSuffix "/" -}}
+        {{- $parts = $parts | append (printf `<a href="%s">%s</a>` . $display) -}}
+      {{- end -}}
+      {{- with site.Params.social.github -}}
+        {{- $display := . | replaceRE `^https?://(www\.)?` "" | strings.TrimSuffix "/" -}}
+        {{- $parts = $parts | append (printf `<a href="%s">%s</a>` . $display) -}}
+      {{- end -}}
+      {{- delimit $parts " &middot; " | safeHTML -}}
+    </p>
+
+    {{ .Content }}
+  </body>
+</html>

@@ -1,0 +1,10 @@
+{{- /* Two variants of the same sentence: the web page points readers at the
+PDF, while the PDF itself (rendered through the "print" output format) can't
+sensibly point at itself. Both render into .Content; site.css hides the print
+variant on the web page, and the print template hides the screen variant. */ -}}
+<span class="pdf-note-screen"> Below is that path in broad strokes --{{ " " -}}
+{{- with site.Params.resumePdfUrl -}}
+  <a href="{{ . | relURL }}" target="_blank" rel="noopener noreferrer">download the detailed PDF résumé</a>
+{{- else -}}
+  a detailed PDF résumé is coming soon
+{{- end }} for the tech-stack-by-tech-stack detail.</span><span class="pdf-note-print"> What follows is that path, tech-stack-by-tech-stack.</span>

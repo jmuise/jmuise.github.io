@@ -1,0 +1,87 @@
+baseURL: "https://jmuise.github.io/"
+locale: "en-us"
+title: "jeremy muise"
+
+# This site has no tags or categories, so skip generating taxonomy pages
+# (and the template lookup warning that comes with an unused taxonomy).
+disableKinds:
+  - taxonomy
+  - term
+
+markup:
+  goldmark:
+    extensions:
+      typographer:
+        # Goldmark's typographer is on by default and silently rewrites a
+        # literal "--" into a Unicode en dash — exactly the ASCII-dash style
+        # used in body text on this site (see content/resume.md,
+        # content/_index.md). Turn off just that substitution; leave smart
+        # quotes and the rest of typographer's defaults alone.
+        enDash: "--"
+
+outputFormats:
+  # A second, self-contained rendering of the résumé page — plain black-on-
+  # white, no nav/icons/decorative chrome — used only as the source Puppeteer
+  # prints to PDF in CI (see .github/workflows/hugo.yml and
+  # layouts/_default/single.print.html). Not linked from anywhere on the
+  # site itself; Hugo just writes it to /resume/index.print.html.
+  PRINT:
+    mediaType: "text/html"
+    isHTML: true
+    noUgly: true
+    permalinkable: false
+    path: "print"
+
+params:
+  # Short first name for the homepage greeting, and the domain label shown
+  # as the brand mark in the header (muise.io once that's the live domain).
+  firstName: "jeremy"
+  # Properly capitalized name, used only on the PDF résumé — ATS name-field
+  # parsing expects this, even though the site's own brand styles lowercase.
+  fullName: "Jeremy Muise"
+  brand: "muise.io"
+  description: "and you've found a little corner of the internet that i maintain"
+  contact:
+    # Formspree form ID — the part after /f/ in your form's endpoint URL.
+    # Create a form at https://formspree.io, then paste the ID here.
+    formspreeID: "xdaqjyzn"
+    # Shown as plain text on the PDF résumé only (not published elsewhere on
+    # the site — the contact page uses a form instead to avoid publishing a
+    # scrapable address). Leave blank to omit the line from the PDF.
+    email: "jeremy@muise.io"
+  social:
+    linkedin: "https://ca.linkedin.com/in/jmuise"
+    github: "https://github.com/jmuise"
+  # Path to the generated PDF résumé, relative to the site root. Rendered via
+  # the PRINT output format above and produced by CI (see
+  # .github/workflows/hugo.yml) — this file doesn't exist until that step
+  # runs, so it won't resolve in a plain local `hugo server` without also
+  # running scripts/render-resume-pdf.mjs. Leave blank and the résumé page
+  # shows a "coming soon" note instead of a broken link.
+  resumePdfUrl: "resume.pdf"
+
+  analytics:
+    # Privacy-friendly page-view analytics — no cookies, no consent banner
+    # needed. Sign up free at https://www.goatcounter.com, then paste just
+    # the site code here (the "MYCODE" part of MYCODE.goatcounter.com).
+    goatcounterCode: ""
+    # Company/organization-level visitor identification, with email alerts
+    # when a recognizable org visits. Sign up for the free "Lite" plan at
+    # https://www.leadfeeder.com, then go to Settings (gear icon) > Company
+    # > Website Tracker > Tracker Script, and paste the ENTIRE script tag
+    # it gives you here (it's account-specific, not a fixed snippet).
+    # Configure who gets emailed, and for which visits, inside Leadfeeder's
+    # own dashboard under notification settings.
+    leadfeederScript: ""
+
+menus:
+  main:
+    - name: Home
+      pageRef: /
+      weight: 1
+    - name: Résumé
+      pageRef: /resume
+      weight: 2
+    - name: Contact
+      pageRef: /contact
+      weight: 3

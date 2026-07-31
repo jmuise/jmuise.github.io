@@ -1,0 +1,14 @@
+{
+  "name": "personal-homepage",
+  "private": true,
+  "description": "Headless-Chromium PDF rendering for the résumé page's print output format.",
+  "type": "module",
+  "scripts": {
+    "render-resume-pdf": "node scripts/render-resume-pdf.mjs public/print/resume/index.html public/resume.pdf",
+    "build": "hugo --gc && npm run render-resume-pdf",
+    "preview": "npm run build && npx --yes serve public -l 3000"
+  },
+  "devDependencies": {
+    "puppeteer": "^24.0.0"
+  }
+}

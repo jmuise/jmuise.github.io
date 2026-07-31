@@ -1,0 +1,35 @@
+{{- /* Screen variant: tiered badges with Nerd Font icons, "show more" behind
+a toggle. Print variant: every skill (tiers collapsed — a PDF has no toggle,
+and ATS keyword matching benefits from the full list), plain text, no icon
+glyphs (those are PUA codepoints that pollute a parser's extracted text).
+site.css hides .skill-groups-print on the web page; the print template hides
+.skill-groups-screen. */ -}}
+<div class="skill-groups-screen">
+  {{- range hugo.Data.resume_skills }}
+    {{- $core := where .items "tier" "ne" "more" }}
+    {{- $more := where .items "tier" "more" }}
+    <div class="skill-group">
+      <h3>{{ .category }}</h3>
+      <ul class="skill-list">
+        {{- range $core }}
+          <li>{{ partial "skill-item.html" . }}</li>
+        {{- end }}
+      </ul>
+      {{- with $more }}
+        <details class="skill-more">
+          <summary>Show {{ len . }} more</summary>
+          <ul class="skill-list">
+            {{- range . }}
+              <li>{{ partial "skill-item.html" . }}</li>
+            {{- end }}
+          </ul>
+        </details>
+      {{- end }}
+    </div>
+  {{- end }}
+</div>
+<div class="skill-groups-print">
+  {{- range hugo.Data.resume_skills }}
+    <p><strong>{{ .category }}:</strong> {{ delimit (apply .items "index" "." "name") ", " }}</p>
+  {{- end }}
+</div>

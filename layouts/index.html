@@ -1,0 +1,37 @@
+{{ define "main" }}
+<header class="hero">
+  <p class="eyebrow" id="greeting">Meowdy, my name is</p>
+  <script>
+    // Progressive enhancement: pick a random greeting each load.
+    // Without JS the eyebrow just keeps its default text above.
+    (function () {
+      var greetings = [
+        "Hello, my name is",
+        "Hiya, my name is",
+        "Howdy, my name is",
+        "Ahoy, my name is",
+        "Yo, my name is",
+        "Greetings, my name is",
+      ];
+      var el = document.getElementById("greeting");
+      if (el)
+        el.textContent =
+          greetings[Math.floor(Math.random() * greetings.length)];
+    })();
+  </script>
+  <h1>
+    {{ .Site.Params.firstName | default .Site.Title }}<span
+      class="cursor"
+      aria-hidden="true"
+      >_</span
+    >
+  </h1>
+  <p class="tagline">
+    {{ with .Site.Params.description }}{{ . }}{{ else }}Building useful things
+    on the web.{{ end }}
+  </p>
+</header>
+
+<div class="prose">{{ .Content }}</div>
+
+{{ end }}
